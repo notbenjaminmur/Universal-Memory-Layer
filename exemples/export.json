@@ -1,0 +1,179 @@
+{
+  "uml_version": "1.0.0",
+  "metadata": {
+    "created_at": "2025-08-27T21:00:00Z",
+    "exporter": {
+      "name": "UML-Demo-Exporter",
+      "version": "1.0.0"
+    },
+    "source_platforms": ["ChatGPT", "Claude", "Mistral"],
+    "timezone": "UTC",
+    "locale": "en-US",
+    "notes": "An anonymized demonstration export for UML."
+  },
+  "user_profile": {
+    "id": "user:demo123",
+    "display_name": "Demo User",
+    "emails": ["demo.user@example.com"],
+    "labels": ["developer", "ai-user", "uml-demo"]
+  },
+  "privacy": {
+    "pii_annotations": [],
+    "redactions": [],
+    "consents": [
+      {
+        "scope": "uml_export_demo",
+        "granted_at": "2025-08-27T21:00:00Z"
+      }
+    ]
+  },
+  "conversations": [
+    {
+      "id": "conv-001",
+      "title": "Getting Started with UML",
+      "created_at": "2025-08-27T19:30:00Z",
+      "updated_at": "2025-08-27T19:40:00Z",
+      "participants": [
+        { "role": "user", "id": "user:demo123", "display_name": "Demo User" },
+        { "role": "assistant", "id": "assistant:uml", "display_name": "AI Assistant" }
+      ],
+      "source": {
+        "platform": "ChatGPT",
+        "thread_id": "thread-001",
+        "model": "GPT-5"
+      },
+      "tags": ["uml", "memory", "demo"],
+      "messages": [
+        {
+          "id": "msg-001",
+          "timestamp": "2025-08-27T19:31:00Z",
+          "role": "user",
+          "content": [
+            { "type": "text", "text": "What is UML in the context of AI?" }
+          ]
+        },
+        {
+          "id": "msg-002",
+          "timestamp": "2025-08-27T19:32:00Z",
+          "role": "assistant",
+          "model": "GPT-5",
+          "content": [
+            { "type": "text", "text": "UML is a universal format for exporting and importing AI memories." }
+          ]
+        }
+      ]
+    }
+  ],
+  "memories": {
+    "short_term": [
+      {
+        "id": "mem-st-001",
+        "kind": "note",
+        "value": "User asked about UML basics.",
+        "confidence": 0.9,
+        "first_seen_at": "2025-08-27T19:31:00Z",
+        "last_updated_at": "2025-08-27T19:31:00Z",
+        "source_refs": [{ "type": "message", "id": "msg-001" }],
+        "labels": ["uml", "question"]
+      }
+    ],
+    "long_term": [
+      {
+        "id": "mem-lt-001",
+        "kind": "fact",
+        "value": "UML is designed for portability of AI conversational memory.",
+        "confidence": 0.95,
+        "first_seen_at": "2025-08-27T19:32:00Z",
+        "last_updated_at": "2025-08-27T19:32:00Z",
+        "labels": ["uml", "definition"]
+      }
+    ],
+    "facts": [
+      {
+        "id": "mem-f-001",
+        "kind": "fact",
+        "value": "Demo User speaks English.",
+        "confidence": 0.85,
+        "first_seen_at": "2025-08-27T18:00:00Z"
+      }
+    ],
+    "skills": [
+      {
+        "id": "mem-s-001",
+        "kind": "skill",
+        "value": "Familiar with JSON and API design.",
+        "confidence": 0.9,
+        "first_seen_at": "2025-08-27T18:10:00Z"
+      }
+    ],
+    "preferences": [
+      {
+        "id": "mem-p-001",
+        "kind": "preference",
+        "value": "Prefers concise, technical answers.",
+        "confidence": 0.9,
+        "first_seen_at": "2025-08-27T18:15:00Z"
+      }
+    ],
+    "knowledge_graph": {
+      "nodes": [
+        { "id": "kg-1", "type": "Person", "props": { "name": "Demo User" } },
+        { "id": "kg-2", "type": "Concept", "props": { "name": "UML" } }
+      ],
+      "edges": [
+        { "id": "kg-e-1", "from": "kg-1", "to": "kg-2", "type": "interested_in", "props": {} }
+      ]
+    }
+  },
+  "artifacts": {
+    "files": [
+      {
+        "id": "file-001",
+        "kind": "file",
+        "mime_type": "application/pdf",
+        "name": "uml_overview.pdf",
+        "size_bytes": 12345,
+        "uri": "https://example.com/files/uml_overview.pdf",
+        "hash": "abc123hash",
+        "props": {}
+      }
+    ],
+    "links": [
+      {
+        "id": "link-001",
+        "kind": "link",
+        "mime_type": "text/html",
+        "name": "UML GitHub Repository",
+        "size_bytes": 0,
+        "uri": "https://github.com/universal-memory-layer/uml",
+        "hash": "",
+        "props": {}
+      }
+    ],
+    "tool_results": []
+  },
+  "embeddings": {
+    "vector_stores": [
+      {
+        "id": "vs-001",
+        "model": "text-embedding-demo-001",
+        "dimension": 3,
+        "index_type": "cosine",
+        "items": [
+          {
+            "ref": { "type": "message", "id": "msg-001" },
+            "embedding": [0.12, 0.98, 0.33],
+            "metadata": { "note": "semantic embedding of user question" }
+          }
+        ]
+      }
+    ],
+    "message_index": [
+      { "message_id": "msg-001", "vector_store_id": "vs-001", "item_idx": 0 }
+    ]
+  },
+  "integrity": {
+    "hash": "sha256-xyz123",
+    "signature": "sig-demo-001"
+  }
+}
