@@ -1,0 +1,357 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/uml.schema.json",
+  "title": "Universal Memory Layer",
+  "type": "object",
+  "required": ["uml_version", "metadata", "user_profile", "privacy", "conversations", "memories", "artifacts", "embeddings", "integrity"],
+  "properties": {
+    "uml_version": { "type": "string", "enum": ["1.0.0"] },
+    "metadata": {
+      "type": "object",
+      "required": ["created_at", "exporter", "source_platforms", "timezone", "locale"],
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "exporter": {
+          "type": "object",
+          "required": ["name", "version"],
+          "properties": {
+            "name": { "type": "string" },
+            "version": { "type": "string" }
+          }
+        },
+        "source_platforms": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "timezone": { "type": "string" },
+        "locale": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "user_profile": {
+      "type": "object",
+      "required": ["id", "display_name"],
+      "properties": {
+        "id": { "type": "string" },
+        "display_name": { "type": "string" },
+        "emails": { "type": "array", "items": { "type": "string", "format": "email" } },
+        "labels": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "properties": {
+        "pii_annotations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["target_ref", "kind", "range"],
+            "properties": {
+              "target_ref": {
+                "type": "object",
+                "required": ["type", "id"],
+                "properties": {
+                  "type": { "type": "string", "enum": ["message", "attachment", "artifact"] },
+                  "id": { "type": "string" }
+                }
+              },
+              "kind": { "type": "string" },
+              "range": {
+                "type": "object",
+                "required": ["start", "end"],
+                "properties": {
+                  "start": { "type": "integer", "minimum": 0 },
+                  "end": { "type": "integer", "minimum": 0 }
+                }
+              }
+            }
+          }
+        },
+        "redactions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["target_ref", "method"],
+            "properties": {
+              "target_ref": {
+                "type": "object",
+                "required": ["type", "id"],
+                "properties": {
+                  "type": { "type": "string", "enum": ["message", "attachment", "artifact"] },
+                  "id": { "type": "string" }
+                }
+              },
+              "method": { "type": "string", "enum": ["mask", "remove", "hash"] },
+              "details": { "type": "string" }
+            }
+          }
+        },
+        "consents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["scope", "granted_at"],
+            "properties": {
+              "scope": { "type": "string" },
+              "granted_at": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      }
+    },
+    "conversations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "created_at", "participants", "source", "messages"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "participants": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["role", "id"],
+              "properties": {
+                "role": { "type": "string", "enum": ["user", "assistant", "system"] },
+                "id": { "type": "string" },
+                "display_name": { "type": "string" }
+              }
+            }
+          },
+          "source": {
+            "type": "object",
+            "required": ["platform"],
+            "properties": {
+              "platform": { "type": "string" },
+              "thread_id": { "type": "string" },
+              "model": { "type": "string" }
+            }
+          },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "timestamp", "role", "content"],
+              "properties": {
+                "id": { "type": "string" },
+                "timestamp": { "type": "string", "format": "date-time" },
+                "role": { "type": "string", "enum": ["user", "assistant", "system"] },
+                "model": { "type": "string" },
+                "parent_id": { "type": "string" },
+                "content": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["type"],
+                    "properties": {
+                      "type": { "type": "string", "enum": ["text", "image", "code", "tool_result"] },
+                      "text": { "type": "string" },
+                      "language": { "type": "string" },
+                      "uri": { "type": "string" }
+                    }
+                  }
+                },
+                "attachments": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "kind", "mime_type", "name", "size_bytes", "uri"],
+                    "properties": {
+                      "id": { "type": "string" },
+                      "kind": { "type": "string", "enum": ["file", "link"] },
+                      "mime_type": { "type": "string" },
+                      "name": { "type": "string" },
+                      "size_bytes": { "type": "integer", "minimum": 0 },
+                      "uri": { "type": "string" },
+                      "hash": { "type": "string" }
+                    }
+                  }
+                },
+                "tool_calls": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "tool_name", "arguments"],
+                    "properties": {
+                      "id": { "type": "string" },
+                      "tool_name": { "type": "string" },
+                      "arguments": { "type": "object" },
+                      "result": { "type": "object" },
+                      "started_at": { "type": "string", "format": "date-time" },
+                      "finished_at": { "type": "string", "format": "date-time" },
+                      "status": { "type": "string", "enum": ["success", "error", "partial"] }
+                    }
+                  }
+                },
+                "metrics": {
+                  "type": "object",
+                  "properties": {
+                    "input_tokens": { "type": "integer", "minimum": 0 },
+                    "output_tokens": { "type": "integer", "minimum": 0 },
+                    "latency_ms": { "type": "integer", "minimum": 0 }
+                  }
+                },
+                "labels": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "memories": {
+      "type": "object",
+      "required": ["short_term", "long_term", "facts", "skills", "preferences", "knowledge_graph"],
+      "properties": {
+        "short_term": { "type": "array", "items": { "$ref": "#/definitions/memoryUnit" } },
+        "long_term": { "type": "array", "items": { "$ref": "#/definitions/memoryUnit" } },
+        "facts": { "type": "array", "items": { "$ref": "#/definitions/memoryUnit" } },
+        "skills": { "type": "array", "items": { "$ref": "#/definitions/memoryUnit" } },
+        "preferences": { "type": "array", "items": { "$ref": "#/definitions/memoryUnit" } },
+        "knowledge_graph": {
+          "type": "object",
+          "required": ["nodes", "edges"],
+          "properties": {
+            "nodes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "type"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "type": { "type": "string" },
+                  "props": { "type": "object" }
+                }
+              }
+            },
+            "edges": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "from", "to", "type"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "from": { "type": "string" },
+                  "to": { "type": "string" },
+                  "type": { "type": "string" },
+                  "props": { "type": "object" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "files": { "type": "array", "items": { "$ref": "#/definitions/artifact" } },
+        "links": { "type": "array", "items": { "$ref": "#/definitions/artifact" } },
+        "tool_results": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "embeddings": {
+      "type": "object",
+      "properties": {
+        "vector_stores": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "model", "dimension", "index_type", "items"],
+            "properties": {
+              "id": { "type": "string" },
+              "model": { "type": "string" },
+              "dimension": { "type": "integer", "minimum": 0 },
+              "index_type": { "type": "string" },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["ref", "embedding"],
+                  "properties": {
+                    "ref": {
+                      "type": "object",
+                      "required": ["type", "id"],
+                      "properties": {
+                        "type": { "type": "string", "enum": ["message", "artifact", "memory"] },
+                        "id": { "type": "string" }
+                      }
+                    },
+                    "embedding": {
+                      "type": "array",
+                      "items": { "type": "number" }
+                    },
+                    "metadata": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "message_index": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["message_id", "vector_store_id", "item_idx"],
+            "properties": {
+              "message_id": { "type": "string" },
+              "vector_store_id": { "type": "string" },
+              "item_idx": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "properties": {
+        "hash": { "type": "string" },
+        "signature": { "type": "string" }
+      }
+    }
+  },
+  "definitions": {
+    "memoryUnit": {
+      "type": "object",
+      "required": ["id", "kind", "value", "confidence", "first_seen_at"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string", "enum": ["fact", "skill", "preference", "note"] },
+        "value": { "type": "string" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "first_seen_at": { "type": "string", "format": "date-time" },
+        "last_updated_at": { "type": "string", "format": "date-time" },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "id"],
+            "properties": {
+              "type": { "type": "string", "enum": ["message", "artifact", "external"] },
+              "id": { "type": "string" }
+            }
+          }
+        },
+        "labels": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["id", "kind", "mime_type", "name", "size_bytes", "uri"],
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string", "enum": ["file", "link"] },
+        "mime_type": { "type": "string" },
+        "name": { "type": "string" },
+        "size_bytes": { "type": "integer", "minimum": 0 },
+        "uri": { "type": "string" },
+        "hash": { "type": "string" },
+        "props": { "type": "object" }
+      }
+    }
+  }
+}
